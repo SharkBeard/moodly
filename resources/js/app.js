@@ -21,8 +21,9 @@ window.Vue = require('vue');
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('magic-input', require('./components/MagicInput.vue').default);
-Vue.component('magic-list', require('./components/MagicList.vue').default);
+// Vue.component('magic-list', require('./components/MagicList.vue').default);
 Vue.component('entry', require('./components/Entry.vue').default);
+Vue.component('entry-list', require('./components/EntryList.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

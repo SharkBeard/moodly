@@ -11,8 +11,8 @@ class EntrySeeder extends Seeder
      */
     public function run()
     {
-      factory(App\Entry::class, 10)->create()->each(function ($entry) {
+      factory(App\Models\Entry::class, 10)->create()/*->each(function ($entry) {
         //$entry->comments()->save(factory(App\Comment::class)->make());
-      });
+      })*/;
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\entry;
+use App\Models\Entry;
 use Illuminate\Http\Request;
 
 class EntryController extends Controller
@@ -14,7 +14,9 @@ class EntryController extends Controller
      */
     public function index()
     {
-      $entries = App\Entry::orderBy('created_at', 'desc')->take(10);
+      $entries = Entry::orderBy('created_at', 'desc')->take(10)->get();
+      // $entries = Entry::all();
+      return response()->json($entries, 200);
     }
 
     /**
@@ -25,7 +27,20 @@ class EntryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+      $input = $request->all();
+
+      $validator = Validator::make($input, [
+          'mood' => 'required',
+          'story' => 'required'
+      ]);
+
+      if ($validator->fails()) {
+        return $this->sendError('Validation Error.', $validator->errors());
+      }
+
+      $product = Product::create($input);
+
+      return response()->json($entries, 200);
     }
 
     /**
