@@ -1909,7 +1909,56 @@ module.exports = {
 module.exports = {
   props: ['user_id'],
   data: function data() {
-    return {};
+    return {
+      message: {
+        text: '',
+        css: ''
+      },
+      mood: '',
+      story: '',
+      button_class: 'btn-outline-primary'
+    };
+  },
+  methods: {
+    send: function send() {
+      var instance = this;
+      axios.post('/api/entries', {
+        mood: instance.mood,
+        story: instance.story,
+        user_id: instance.user_id
+      }).then(function (response) {
+        instance.mood = '';
+        instance.story = '';
+        instance.button_class = 'btn-success';
+        instance.message = {
+          text: 'Thanks for sharing how you feel with us. You are wonderful.',
+          css: 'alert-success'
+        };
+      });
+    },
+    save: function save() {
+      if (this.mood == '') {
+        this.message = {
+          text: 'Please tell us how you are feeling',
+          css: 'alert-info'
+        };
+        this.button_class = 'btn-outline-warning';
+      } else if (this.story == '') {
+        this.message = {
+          text: 'Why do you feel that way?',
+          css: 'alert-info'
+        };
+        this.button_class = 'btn-outline-warning';
+      } else {
+        this.send();
+      }
+    },
+    update_mood: function update_mood(value) {
+      this.mood = value;
+    },
+    update_story: function update_story(value) {
+      this.story = value;
+    }
   }
 };
 
@@ -1931,7 +1980,7 @@ module.exports = {
   methods: {
     getEntries: function getEntries() {
       instance = this;
-      axios.get('/public/api/entries').then(function (response) {
+      axios.get('/api/entries').then(function (response) {
         instance.entries = response.data;
       });
     }
@@ -1989,7 +2038,6 @@ module.exports = {
     return {
       classes: ['text-center', 'text-monospace'],
       off_classes: ["border-left-0", "border-right-0", "border-top-0", "bg-transparent", "border-dark"],
-      compounding_words: [' and ', ' or ', ' but '],
       focus: this.focused,
       text: ""
     };
@@ -2006,27 +2054,11 @@ module.exports = {
     }
   },
   methods: {
-    removeClass: function removeClass(value) {
-      var index = this.classes.indexOf(value);
-
-      if (index >= 0) {
-        this.classes.splice(index);
-      }
-    },
     focusOn: function focusOn() {
       this.focus = true;
     },
     focusOff: function focusOff() {
-      this.focus = false; //this.check_word();
-    },
-    check_word: function check_word() {
-      var instance = this;
-      this.compounding_words.forEach(function (word, index, list) {
-        if (instance.text.includes(word)) {
-          phrase;
-          instance.$emit('compound', instance.text);
-        }
-      });
+      this.focus = false;
     }
   }
 };
@@ -37584,9 +37616,15 @@ var render = function() {
       { staticClass: "lead" },
       [
         _vm._v("I feel "),
-        _c("magic-input", { attrs: { name: "mood" } }),
+        _c("magic-input", {
+          attrs: { name: "mood" },
+          on: { updated: _vm.update_mood }
+        }),
         _vm._v(" because "),
-        _c("magic-input", { attrs: { name: "phrase" } }),
+        _c("magic-input", {
+          attrs: { name: "story" },
+          on: { updated: _vm.update_story }
+        }),
         _vm._v(".")
       ],
       1
@@ -37597,7 +37635,17 @@ var render = function() {
       domProps: { value: _vm.user_id }
     }),
     _vm._v(" "),
-    _c("button", { staticClass: "btn btn-success" }, [_vm._v("Save")])
+    _c(
+      "button",
+      { staticClass: "btn", class: _vm.button_class, on: { click: _vm.save } },
+      [_vm._v("Save")]
+    ),
+    _vm._v(" "),
+    _vm.message.text != ""
+      ? _c("div", { staticClass: "alert mt-2", class: _vm.message.css }, [
+          _vm._v(_vm._s(_vm.message.text))
+        ])
+      : _vm._e()
   ])
 }
 var staticRenderFns = []
@@ -37721,6 +37769,9 @@ var render = function() {
     on: {
       focus: _vm.focusOn,
       blur: _vm.focusOff,
+      change: function($event) {
+        return _vm.$emit("updated", _vm.text)
+      },
       input: function($event) {
         if ($event.target.composing) {
           return

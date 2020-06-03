@@ -29,18 +29,9 @@ class EntryController extends Controller
     {
       $input = $request->all();
 
-      $validator = Validator::make($input, [
-          'mood' => 'required',
-          'story' => 'required'
-      ]);
+      $entry = Entry::create($input);
 
-      if ($validator->fails()) {
-        return $this->sendError('Validation Error.', $validator->errors());
-      }
-
-      $product = Product::create($input);
-
-      return response()->json($entries, 200);
+      return response()->json($entry, 200);
     }
 
     /**

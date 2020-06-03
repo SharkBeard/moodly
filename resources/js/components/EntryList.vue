@@ -8,7 +8,7 @@
     methods: {
       getEntries: function() {
         instance = this;
-        axios.get('/public/api/entries')
+        axios.get('/api/entries')
           .then( function(response) {
             instance.entries = response.data;
           });
