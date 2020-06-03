@@ -1,5 +1,5 @@
 // Body
-$body-bg: #f8fafc;
+// $body-bg: #f8fafc;
 
 // Typography
 $font-family-sans-serif: 'Nunito', sans-serif;
@@ -17,3 +17,24 @@ $yellow: #ffed4a;
 $green: #38c172;
 $teal: #4dc0b5;
 $cyan: #6cb2eb;
+
+$chill: linear-gradient(135deg, #09e485 0%, #0291e3 100%);
+$warm: linear-gradient(135deg, #F2CD48 0%, #FD803F 100%);
+$hot: linear-gradient(135deg, #F9445A 0%, #FD803F 100%);
+$cold: linear-gradient(135deg, #8019C6 0%, #2F93CC 100%);
+
+// Bootstrap Overrides
+$theme-colors: (
+  "primary": #27A2FC,
+  "secondary": #A0B7BC,
+  "success": #37BD74,
+  "danger": #E8286B,
+  "info": #7EBCFA,
+  "warning": #FF9B37,
+  "light": #EEF0F2,
+  "dark": #3C4055
+);
+
+$body-bg: #A0B7BC;
+$border-width: 3px;
+$enable-gradients: true;
